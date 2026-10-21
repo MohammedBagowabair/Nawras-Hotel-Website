@@ -1,0 +1,174 @@
+@import "tailwindcss";
+
+@theme {
+  --color-foam: #f5f9f8;
+  --color-shell: #fdfbf7;
+  --color-sand: #efe6d8;
+  --color-dune: #e3d5bf;
+  --color-sea: #2bb3a8;
+  --color-sea-deep: #0b746d;
+  --color-lagoon: #d8efec;
+  --color-ocean: #0c3b57;
+  --color-abyss: #062433;
+  --color-mist: #4f6676;
+  --color-coral: #f07a63;
+  --color-coral-deep: #b9432f;
+  --color-blush: #fbe3dc;
+  --color-wa: #1f8f4e;
+  --font-body: "Tajawal", system-ui, sans-serif;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+/* Bilingual text (components/T.tsx) */
+html[lang="ar"] .t-en,
+html:not([lang="ar"]) .t-ar {
+  display: none;
+}
+
+html {
+  background: var(--color-foam);
+  color: var(--color-ocean);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  scroll-padding-top: 4.5rem;
+}
+body {
+  font-family: var(--font-body);
+  overflow-x: clip;
+  line-height: 1.6;
+}
+.font-display {
+  font-family: "KufiHero", "Reem Kufi", system-ui, sans-serif;
+  font-weight: 500;
+  line-height: 1.25;
+}
+html[lang="ar"] .font-display {
+  word-spacing: 0.12em;
+}
+html:not([lang="ar"]) .font-display {
+  letter-spacing: -0.02em;
+}
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Swipe rails (in a layer so responsive utilities like lg:grid can override) */
+@layer components {
+.rail {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.rail::-webkit-scrollbar {
+  display: none;
+}
+.rail > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+}
+
+.press {
+  transition: transform 0.2s var(--ease-out-soft), background-color 0.2s, box-shadow 0.2s, color 0.2s;
+}
+.press:active {
+  transform: scale(0.95);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s var(--ease-out-soft), transform 0.7s var(--ease-out-soft);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Story hero */
+.story-slide {
+  transition: opacity 0.9s ease, transform 6.5s linear;
+}
+.story-bar > i {
+  transform-origin: left;
+  transform: scaleX(0);
+}
+[dir="rtl"] .story-bar > i {
+  transform-origin: right;
+}
+.story-bar[data-state="done"] > i {
+  transform: scaleX(1);
+}
+.story-bar[data-state="run"] > i {
+  animation: story 6s linear forwards;
+}
+.story-bar[data-state="run"][data-paused] > i {
+  animation-play-state: paused;
+}
+@keyframes story {
+  to { transform: scaleX(1); }
+}
+
+/* Room deck */
+.deck-card {
+  transition: transform 0.55s var(--ease-spring), opacity 0.4s ease, box-shadow 0.3s;
+  will-change: transform;
+}
+.deck-card[data-drag] {
+  transition: none;
+}
+
+/* Wave divider */
+.wave-edge {
+  -webkit-mask: radial-gradient(14px 10px at 50% 0, #0000 98%, #000) 50% / 28px 100%;
+  mask: radial-gradient(14px 10px at 50% 0, #0000 98%, #000) 50% / 28px 100%;
+}
+
+/* Chat bubbles */
+@keyframes pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+.bubble {
+  animation: pop 0.35s var(--ease-out-soft) both;
+}
+
+.sheet-backdrop {
+  transition: opacity 0.3s ease;
+}
+.sheet-panel {
+  transition: transform 0.42s var(--ease-out-soft);
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details[open] .faq-icon {
+  transform: rotate(45deg);
+}
+
+body[data-locked] .tabbar {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .story-bar[data-state="run"] > i {
+    transform: scaleX(1);
+  }
+}
